@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALB Admin</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&family=Barlow:wght@400;500;600;700&family=Chivo+Mono:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<style>
+:root{
+  --ink:#080405; --panel:#150b0e; --panel-2:#1d1013;
+  --blood:#c1121f; --ember:#ff2d3f; --ember-soft:#ff6b78;
+  --bone:#f6f1ee; --steel:#9aa0ab; --dim:#948a8d; --line:rgba(255,255,255,.1);
+  --master:#a45cff; --ultra:#ffc247; --great:#3d8bff; --ok:#3ddc84;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--bone);font-family:'Barlow',system-ui,sans-serif;padding:1.6rem 1rem 4rem;min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:-10;pointer-events:none;
+  background:radial-gradient(60% 40% at 50% -5%,rgba(193,18,31,.42),transparent 65%),
+    radial-gradient(45% 35% at 92% 45%,rgba(193,18,31,.16),transparent 70%),
+    linear-gradient(to bottom,#0d0507,#080405 55%,#0b0406)}
+.grain{position:fixed;inset:0;z-index:-8;pointer-events:none;background-image:var(--grain);background-size:140px;opacity:.05;mix-blend-mode:overlay}
+.rail{position:fixed;top:0;left:0;right:0;height:3px;z-index:100;
+  background:linear-gradient(90deg,#5c0009,var(--ember),#fff0f1,var(--ember),#5c0009);
+  background-size:250% 100%;animation:railFlow 7s linear infinite;box-shadow:0 0 14px rgba(255,45,63,.8)}
+@keyframes railFlow{to{background-position:250% 0}}
+
+.container{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.brand{text-align:center;margin:14px 0 30px}
+.brand .sign{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 125,'wght' 900;
+  font-size:3.2rem;line-height:.9;color:#fff2f3;
+  text-shadow:0 0 4px #fff,0 0 14px var(--ember-soft),0 0 34px var(--ember),0 0 70px var(--blood)}
+.brand .sub{font-family:'Chivo Mono',monospace;font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;color:var(--steel);margin-top:10px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-top:1px solid rgba(255,255,255,.28);
+  border-radius:6px;padding:1.5rem;margin-bottom:1.8rem;box-shadow:0 18px 40px rgba(0,0,0,.6)}
+h2{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 116,'wght' 900;
+  font-size:1.25rem;text-transform:uppercase;letter-spacing:.02em;margin-bottom:1.2rem;padding-bottom:11px;border-bottom:1px solid var(--line)}
+.section-title{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 116,'wght' 900;
+  font-size:1.4rem;text-transform:uppercase;text-align:center;margin:2.6rem 0 1.3rem}
+
+label{display:block;margin-bottom:.4rem;font-family:'Chivo Mono',monospace;font-size:.66rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+input,select,textarea{width:100%;padding:12px;margin-bottom:1rem;background:rgba(0,0,0,.55);
+  border:1px solid #35272a;color:#fff;border-radius:4px;font-size:1rem;font-family:'Barlow',sans-serif;
+  transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ember);box-shadow:0 0 12px rgba(255,45,63,.25)}
+textarea{resize:vertical}
+input[type="datetime-local"]{color-scheme:dark;cursor:pointer;border-color:rgba(255,45,63,.55);margin-bottom:.6rem}
+input[type="file"]{background:rgba(255,255,255,.04);padding:10px;border:1px dashed #4a373b;cursor:pointer;font-size:.9rem}
+input[type="file"]::file-selector-button{background:var(--blood);color:#fff;font-weight:700;border:none;padding:8px 16px;border-radius:3px;cursor:pointer;margin-right:10px}
+input[type="file"]::file-selector-button:hover{filter:brightness(1.2)}
+
+.flex-row{display:flex;gap:15px;width:100%}
+.flex-row>div{flex:1}
+.group-label{font-family:'Chivo Mono',monospace;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin:0 0 9px 2px}
+
+/* tier tiles */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.4rem}
+.tier-tile{border:1px solid #35272a;border-radius:5px;padding:15px 8px 13px;background:rgba(0,0,0,.45);
+  cursor:pointer;text-align:center;transition:.2s;user-select:none}
+.tier-tile .orb{width:22px;height:22px;border-radius:50%;margin:0 auto 8px;position:relative;border:2px solid #0c0c10}
+.tier-tile .orb::after{content:'';position:absolute;inset:0;margin:auto;width:7px;height:7px;border-radius:50%;background:#fff;border:2px solid #1b1b1f}
+.tier-tile .t-name{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 112,'wght' 800;
+  font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;display:block;color:#fff}
+.tier-tile .t-sub{font-size:.66rem;color:var(--dim);display:block;margin-top:4px}
+.tier-tile:hover{border-color:#6a4d52}
+.tt-baller .orb{background:linear-gradient(#a45cff 0 48%,#1b1b1f 0 52%,#2a2a30)}
+.tt-bundle .orb{background:linear-gradient(#ffc247 0 42%,#1b1b1f 0 48%,#ffc247 0 54%,#1b1b1f 0 60%,#2a2a30)}
+.tt-msrp   .orb{background:linear-gradient(#3d8bff 0 48%,#1b1b1f 0 52%,#2a2a30)}
+.tier-tile.selected{border-color:var(--ember);background:rgba(193,18,31,.14);box-shadow:0 0 20px rgba(255,45,63,.3)}
+
+/* chips */
+.chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.chip{padding:8px 14px;border-radius:3px;background:rgba(193,18,31,.1);border:1px solid rgba(255,45,63,.4);
+  color:var(--ember-soft);font-family:'Chivo Mono',monospace;font-size:.68rem;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;transition:.2s}
+.chip:hover{background:rgba(193,18,31,.3);color:#fff}
+.chip.clear{background:rgba(255,255,255,.04);border-color:#4a373b;color:var(--steel)}
+.open-note{display:flex;align-items:flex-start;gap:9px;background:rgba(193,18,31,.09);border:1px solid rgba(255,45,63,.3);
+  color:var(--ember-soft);padding:11px 14px;border-radius:4px;font-size:.85rem;margin-bottom:1.2rem}
+
+/* visibility */
+.vis-row{display:flex;gap:10px;margin-bottom:1.4rem}
+.vis-pill{flex:1;padding:12px;border-radius:4px;text-align:center;cursor:pointer;user-select:none;
+  border:1px solid #35272a;background:rgba(0,0,0,.45);color:var(--steel);transition:.2s;
+  font-family:'Chivo Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.vis-pill.selected.v-public{border-color:var(--ok);color:var(--ok);background:rgba(61,220,132,.08)}
+.vis-pill.selected.v-hidden{border-color:var(--ember);color:var(--ember);background:rgba(255,45,63,.08)}
+
+.primary-btn{width:100%;padding:1rem;border:none;border-radius:4px;cursor:pointer;color:#fff;
+  font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 112,'wght' 800;
+  font-size:.95rem;letter-spacing:.16em;text-transform:uppercase;
+  background:linear-gradient(#e01a2a,var(--blood) 55%,#8d0812);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 6px 18px rgba(193,18,31,.4);transition:.2s}
+.primary-btn:hover{filter:brightness(1.14);transform:translateY(-1px)}
+.primary-btn:disabled{opacity:.6;cursor:progress;transform:none}
+
+.img-preview-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.img-preview-row img{width:56px;height:56px;object-fit:cover;border-radius:4px;border:1px solid rgba(255,45,63,.4)}
+
+/* inventory */
+.inventory-controls{display:flex;flex-direction:column;gap:14px;margin-bottom:1.4rem}
+.search-box{position:relative}
+.search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ember);font-size:1.1rem}
+.search-box input{padding-left:44px;margin-bottom:0;border-radius:4px}
+.tab-container{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.tab-container::-webkit-scrollbar{display:none}
+.inv-tab{flex:1;min-width:max-content;background:rgba(255,255,255,.04);border:1px solid var(--line);
+  color:var(--steel);padding:10px 15px;border-radius:4px;cursor:pointer;transition:.2s;
+  font-family:'Chivo Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}
+.inv-tab:hover{color:#fff;border-color:#6a4d52}
+.inv-tab.active{border-color:var(--ember);color:#fff;background:rgba(193,18,31,.2)}
+
+ul{padding:0;margin:0}
+li{background:var(--panel-2);padding:1.15rem;margin-bottom:.9rem;border-radius:5px;border:1px solid var(--line);
+  list-style:none;display:flex;flex-direction:column;gap:1rem;transition:.2s}
+li:hover{border-color:rgba(255,45,63,.35)}
+.item-content{flex:1;min-width:0}
+.item-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.item-title{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 108,'wght' 800;font-size:1.05rem;line-height:1.25;color:#fff}
+.item-meta{font-family:'Chivo Mono',monospace;font-size:.72rem;color:var(--steel);display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:5px}
+.item-meta strong{color:#fff}
+
+.badge{padding:4px 9px;font-family:'Chivo Mono',monospace;font-size:.6rem;border-radius:3px;
+  letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;border:1px solid currentColor}
+.b-baller{color:var(--master)} .b-bundle{color:var(--ultra)} .b-msrp{color:var(--great)}
+.b-open{color:var(--ok);background:rgba(61,220,132,.08)}
+.b-closed{color:#7d7377}
+.b-hidden{color:var(--ember);background:rgba(255,45,63,.08)}
+.b-time{color:var(--ember-soft)}
+.b-imgs{color:var(--steel)}
+
+.btn-group{display:flex;gap:9px;width:100%}
+.btn-group button{padding:10px;border:1px solid;border-radius:4px;cursor:pointer;flex:1;background:transparent;
+  font-family:'Chivo Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;transition:.2s}
+.btn-edit{color:var(--great);border-color:rgba(61,139,255,.5)} .btn-edit:hover{background:rgba(61,139,255,.14)}
+.btn-del{color:var(--ember);border-color:rgba(255,45,63,.5)} .btn-del:hover{background:rgba(255,45,63,.16)}
+
+#login-section{display:block} #admin-section{display:none}
+.empty-state{color:var(--dim);padding:2.2rem 1rem;text-align:center;background:rgba(0,0,0,.3);border-radius:5px;border:1px dashed #3a2b2e}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(150%);
+  background:rgba(16,8,10,.97);border:1px solid var(--ember);color:#fff;padding:12px 22px;border-radius:4px;
+  font-weight:600;box-shadow:0 0 30px rgba(255,45,63,.35);z-index:9999;transition:transform .4s cubic-bezier(.22,1,.36,1);max-width:90%}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.err{border-color:#ff8ba7}
+
+.foot-actions{display:flex;flex-direction:column;gap:12px;margin-top:2.6rem}
+.foot-actions button{background:transparent;border:1px solid #4a373b;color:var(--steel);padding:12px;border-radius:4px;
+  cursor:pointer;font-family:'Chivo Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+.foot-actions a{text-align:center;color:var(--dim);text-decoration:none;padding:10px;
+  font-family:'Chivo Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.tier-tile:focus-visible,.vis-pill:focus-visible,.chip:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+@media(max-width:600px){.flex-row{flex-direction:column;gap:0}.card{padding:1.15rem}.brand .sign{font-size:2.6rem}}
+@media(min-width:600px){li{flex-direction:row;align-items:center;justify-content:space-between}
+  .btn-group{width:auto;flex-shrink:0;flex-direction:column;gap:8px}.btn-group button{padding:8px 20px;width:100%}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+</style>
+</head>
+<body>
+<div class="rail"></div>
+<div class="grain"></div>
+
+<div class="container">
+  <div class="brand">
+    <div class="sign">ALB</div>
+    <div class="sub">Break control</div>
+  </div>
+
+  <div id="login-section" class="card">
+    <label for="login-username">Username</label>
+    <input type="text" id="login-username" autocomplete="username">
+    <label for="login-password">Password</label>
+    <input type="password" id="login-password" autocomplete="current-password">
+    <button class="primary-btn" onclick="login()">Sign in</button>
+  </div>
+
+  <div id="admin-section">
+    <div class="card">
+      <h2>Add a break</h2>
+
+      <p class="group-label">Tier</p>
+      <div class="tier-grid" id="tier-breaks">
+        <div class="tier-tile tt-baller" data-type="baller" tabindex="0" role="button">
+          <span class="orb"></span><span class="t-name">Master Ball</span><span class="t-sub">Top shelf</span>
+        </div>
+        <div class="tier-tile tt-bundle" data-type="bundle" tabindex="0" role="button">
+          <span class="orb"></span><span class="t-name">Ultra Ball</span><span class="t-sub">Bundle value</span>
+        </div>
+        <div class="tier-tile tt-msrp" data-type="msrp" tabindex="0" role="button">
+          <span class="orb"></span><span class="t-name">Great Ball</span><span class="t-sub">Retail price</span>
+        </div>
+      </div>
+
+      <div class="open-note">
+        <i class="ph-fill ph-broadcast" style="margin-top:2px"></i>
+        <span>A break goes live the second you publish it. It closes when the timer below runs out, or when spots hit zero.</span>
+      </div>
+
+      <label for="item-schedule-end">Close time (US Central)</label>
+      <input type="datetime-local" id="item-schedule-end">
+      <div class="chip-row">
+        <button class="chip" onclick="setClose(24)">+24 hours</button>
+        <button class="chip" onclick="setClose(48)">+48 hours</button>
+        <button class="chip" onclick="setClose(72)">+72 hours</button>
+        <button class="chip" onclick="setClose(168)">+1 week</button>
+        <button class="chip clear" onclick="setClose(0)">No close time</button>
+      </div>
+
+      <label for="item-name">Name</label>
+      <input type="text" id="item-name" placeholder="e.g. Prismatic Evolutions booster bundle">
+
+      <label for="item-description">Description</label>
+      <input type="text" id="item-description" placeholder="Short description…">
+
+      <div class="flex-row">
+        <div>
+          <label for="item-price">Price (USD)</label>
+          <input type="number" id="item-price" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div>
+          <label for="item-stock">Spots</label>
+          <input type="number" id="item-stock" value="1" min="0">
+        </div>
+      </div>
+
+      <label for="item-google-form-link">Payment link (Shopify / Stripe / PayPal / Whatnot)</label>
+      <input type="url" id="item-google-form-link" placeholder="https://…">
+
+      <label for="item-image">Images — pick several, they're compressed before upload</label>
+      <input type="file" id="item-image" multiple accept="image/*">
+      <div id="img-preview" class="img-preview-row"></div>
+
+      <label>Visibility</label>
+      <div class="vis-row">
+        <div class="vis-pill v-public selected" data-vis="false" tabindex="0" role="button">Public — live on the site</div>
+        <div class="vis-pill v-hidden" data-vis="true" tabindex="0" role="button">Hidden — draft only</div>
+      </div>
+
+      <button id="submit-btn" class="primary-btn" onclick="submitItem()">Publish break</button>
+    </div>
+
+    <h2 class="section-title">Breaks</h2>
+
+    <div class="inventory-controls">
+      <div class="search-box">
+        <i class="ph-bold ph-magnifying-glass"></i>
+        <input type="text" id="inventory-search" placeholder="Search by name or tier…" onkeyup="renderInventory()">
+      </div>
+      <div class="tab-container">
+        <button class="inv-tab active" onclick="switchTab('all', this)">All</button>
+        <button class="inv-tab" onclick="switchTab('open', this)">Open</button>
+        <button class="inv-tab" onclick="switchTab('closed', this)">Closed</button>
+        <button class="inv-tab" onclick="switchTab('hidden', this)">Hidden</button>
+      </div>
+    </div>
+
+    <ul id="inventory-list"></ul>
+
+    <div class="foot-actions">
+      <button onclick="logout()">Log out</button>
+      <a href="index.html">Return to the live site</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ===============================================================
+   CONFIG
+   =============================================================== */
+const API_URL      = 'https://alb-worker.YOUR-SUBDOMAIN.workers.dev/api';
+const TZ           = 'America/Chicago';
+const CURRENCY     = 'USD';
+const LOCALE       = 'en-US';
+/* =============================================================== */
+
+let allItems = [];
+let editingId = null;
+let currentImage = '';
+let currentImages = [];
+let currentCreatedAt = null;
+let currentClicks = 0;
+let currentTab = 'all';
+let selectedType = 'msrp';
+let selectedHidden = false;
+
+/* ---------- helpers ---------- */
+const wait = ms => new Promise(r => setTimeout(r, ms));
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function money(n){ const v = Number(n); return new Intl.NumberFormat(LOCALE,{style:'currency',currency:CURRENCY}).format(isFinite(v) ? v : 0); }
+function toInt(n, fallback){ const v = parseInt(n,10); return isFinite(v) ? v : (fallback != null ? fallback : 0); }
+
+function toast(msg, isErr){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' err' : '');
+  setTimeout(() => { t.className = 'toast' + (isErr ? ' err' : ''); }, 3200);
+}
+
+async function fetchWithRetry(url, opts = {}, retries = 2){
+  let lastErr;
+  for (let attempt = 0; attempt <= retries; attempt++){
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    try{
+      const res = await fetch(url, { ...opts, signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!res.ok){
+        if (res.status >= 500 && attempt < retries){ await wait(700 * (attempt + 1)); continue; }
+        throw new Error('HTTP ' + res.status);
+      }
+      return res;
+    } catch(e){ clearTimeout(timer); lastErr = e; if (attempt < retries){ await wait(700 * (attempt + 1)); continue; } }
+  }
+  throw lastErr || new Error('Request failed');
+}
+
+/* Same zone interpretation as the storefront */
+function zoneToMs(localStr){
+  if (!localStr || localStr.indexOf('T') === -1) return null;
+  try{
+    const [d, tm] = localStr.split('T');
+    const [y, mo, da] = d.split('-').map(Number);
+    const [h, mi] = (tm || '00:00').split(':').map(Number);
+    const guess = Date.UTC(y, mo - 1, da, h, mi);
+    const parts = new Intl.DateTimeFormat('en-US',{ timeZone:TZ, hour12:false, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' }).formatToParts(new Date(guess));
+    const m = {}; parts.forEach(p => m[p.type] = p.value);
+    const hh = m.hour === '24' ? 0 : Number(m.hour);
+    const seen = Date.UTC(Number(m.year), Number(m.month) - 1, Number(m.day), hh, Number(m.minute), Number(m.second));
+    return guess - (seen - guess);
+  } catch(e){ return new Date(localStr).getTime(); }
+}
+
+const TIER_LABEL = { baller:'Master Ball', bundle:'Ultra Ball', msrp:'Great Ball' };
+
+/* ---------- boot ---------- */
+if (localStorage.getItem('adminToken')){
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('admin-section').style.display = 'block';
+  loadItems();
+}
+document.getElementById('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+/* ---------- tier tiles ---------- */
+function applyTypeUI(){
+  document.querySelectorAll('.tier-tile').forEach(t => t.classList.toggle('selected', t.dataset.type === selectedType));
+  if (!editingId) document.getElementById('submit-btn').innerText = 'Publish break';
+}
+document.querySelectorAll('.tier-tile').forEach(tile => {
+  const pick = () => { selectedType = tile.dataset.type; applyTypeUI(); };
+  tile.addEventListener('click', pick);
+  tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(); } });
+});
+applyTypeUI();
+
+/* ---------- visibility ---------- */
+document.querySelectorAll('.vis-pill').forEach(pill => {
+  const pick = () => {
+    selectedHidden = pill.dataset.vis === 'true';
+    document.querySelectorAll('.vis-pill').forEach(p => p.classList.toggle('selected', p === pill));
+  };
+  pill.addEventListener('click', pick);
+  pill.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(); } });
+});
+
+/* ---------- quick close chips ---------- */
+function setClose(hours){
+  const input = document.getElementById('item-schedule-end');
+  if (!hours){ input.value = ''; toast('Close time cleared — the break stays open until spots run out.'); return; }
+  const target = new Date(Date.now() + hours * 3600000);
+  const pad = n => String(n).padStart(2,'0');
+  input.value = `${target.getFullYear()}-${pad(target.getMonth()+1)}-${pad(target.getDate())}T${pad(target.getHours())}:${pad(target.getMinutes())}`;
+  toast(`Close time set: +${hours >= 168 ? '1 week' : hours + ' hours'}.`);
+}
+
+document.getElementById('item-image').addEventListener('change', function(){
+  const preview = document.getElementById('img-preview');
+  preview.innerHTML = '';
+  Array.from(this.files || []).slice(0, 8).forEach(f => {
+    const url = URL.createObjectURL(f);
+    const img = document.createElement('img');
+    img.src = url;
+    img.onload = () => URL.revokeObjectURL(url);
+    preview.appendChild(img);
+  });
+});
+
+function switchTab(tabName, btnElement){
+  currentTab = tabName;
+  document.querySelectorAll('.inv-tab').forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+  renderInventory();
+}
+
+/* ---------- login ---------- */
+async function login(){
+  const u = document.getElementById('login-username').value;
+  const p = document.getElementById('login-password').value;
+  if (!u || !p){ toast('Enter a username and password.', true); return; }
+  try{
+    const res = await fetchWithRetry(`${API_URL}/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username:u, password:p }) });
+    const data = await res.json();
+    if (data.success){ localStorage.setItem('adminToken', data.token || '1'); location.reload(); }
+    else toast('Those credentials didn\'t work.', true);
+  } catch(e){ toast('Could not reach the server. Try again.', true); }
+}
+
+/* ---------- image compression ---------- */
+function compressImage(file){
+  return new Promise(resolve => {
+    let settled = false;
+    const done = v => { if (!settled){ settled = true; resolve(v); } };
+    const guard = setTimeout(() => done(null), 15000);
+
+    const reader = new FileReader();
+    reader.onerror = () => { clearTimeout(guard); done(null); };
+    reader.onload = event => {
+      const img = new Image();
+      img.onerror = () => { clearTimeout(guard); done(null); };
+      img.onload = () => {
+        try{
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          let scaleSize = MAX_WIDTH / img.width;
+          if (!isFinite(scaleSize) || scaleSize > 1) scaleSize = 1;
+          canvas.width = Math.max(1, Math.round(img.width * scaleSize));
+          canvas.height = Math.max(1, Math.round(img.height * scaleSize));
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          clearTimeout(guard);
+          done(canvas.toDataURL('image/jpeg', 0.8));
+        } catch(e){ clearTimeout(guard); done(null); }
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---------- save ---------- */
+async function submitItem(){
+  const btn = document.getElementById('submit-btn');
+  const name = document.getElementById('item-name').value.trim();
+  if (!name){ toast('Give the break a name first.', true); return; }
+
+  btn.disabled = true;
+  btn.innerText = 'Saving…';
+
+  try{
+    const type = selectedType;
+    const hidden = selectedHidden;
+    const scheduleEnd = document.getElementById('item-schedule-end').value;
+    const desc = document.getElementById('item-description').value;
+    const price = Number(document.getElementById('item-price').value);
+    const stock = toInt(document.getElementById('item-stock').value, 1);
+    const form = document.getElementById('item-google-form-link').value;
+
+    const fileInput = document.getElementById('item-image');
+    let imagesArray = editingId ? [...currentImages] : [];
+
+    if (fileInput.files.length > 0){
+      const compressed = [];
+      for (let i = 0; i < fileInput.files.length; i++){
+        const result = await compressImage(fileInput.files[i]);
+        if (result) compressed.push(result);
+      }
+      if (compressed.length > 0) imagesArray = compressed;
+      else toast('Those images couldn\'t be processed — saving without new images.', true);
+    }
+
+    const img = imagesArray.length > 0 ? imagesArray[0] : (editingId ? currentImage : '');
+
+    const body = {
+      type, name, description: desc,
+      price: isFinite(price) ? price : 0,
+      stock, googleFormLink: form, image: img, images: imagesArray,
+      clickCount: editingId ? currentClicks : 0,
+      createdAt: editingId ? currentCreatedAt : Date.now(),
+      hidden, scheduleDate:'', scheduleEnd, condition:null, grader:null
+    };
+
+    const url = editingId ? `${API_URL}/items/${editingId}` : `${API_URL}/items`;
+    const method = editingId ? 'PUT' : 'POST';
+    await fetchWithRetry(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+
+    const wasEditing = !!editingId;
+    resetForm();
+    toast(wasEditing ? 'Break updated.' : (hidden ? 'Saved as a hidden draft.' : 'Break is live on the site.'));
+    loadItems();
+  } catch(e){
+    console.error('Save error:', e);
+    toast('Save failed — the server didn\'t confirm. Nothing was lost; try again.', true);
+  } finally {
+    btn.disabled = false;
+    if (btn.innerText === 'Saving…') applyTypeUI();
+  }
+}
+
+function resetForm(){
+  editingId = null; currentImage = ''; currentImages = []; currentCreatedAt = null; currentClicks = 0;
+  ['item-name','item-description','item-price','item-google-form-link','item-schedule-end'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('item-stock').value = '1';
+  document.getElementById('item-image').value = '';
+  document.getElementById('img-preview').innerHTML = '';
+  selectedType = 'msrp';
+  selectedHidden = false;
+  document.querySelectorAll('.vis-pill').forEach(p => p.classList.toggle('selected', p.dataset.vis === 'false'));
+  applyTypeUI();
+}
+
+function formatLiteralDate(val){
+  if (!val || val.indexOf('T') === -1) return val || '';
+  try{
+    const [datePart, timePart] = val.split('T');
+    if (!timePart) return val;
+    const [, month, day] = datePart.split('-');
+    return `${day}/${month} at ${timePart}`;
+  } catch(e){ return val; }
+}
+
+/* ---------- load + render ---------- */
+async function loadItems(){
+  const listContainer = document.getElementById('inventory-list');
+  listContainer.innerHTML = '<div class="empty-state">Loading breaks…</div>';
+  try{
+    const res = await fetchWithRetry(`${API_URL}/items`);
+    const items = await res.json();
+    if (!Array.isArray(items)) throw new Error(items && items.error ? items.error : 'Bad data');
+    items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    allItems = items;
+    renderInventory();
+  } catch(e){
+    console.error('Load error:', e);
+    listContainer.innerHTML = '<div class="empty-state">Couldn\'t load the breaks. <button class="btn-edit" style="margin-left:8px;padding:6px 14px;border-radius:4px;cursor:pointer;background:transparent;" onclick="loadItems()">Retry</button></div>';
+  }
+}
+
+function isClosed(item, now){
+  const endMs = zoneToMs(item.scheduleEnd);
+  return toInt(item.stock) <= 0 || (endMs && now >= endMs);
+}
+
+function renderInventory(){
+  const listContainer = document.getElementById('inventory-list');
+  const searchQuery = document.getElementById('inventory-search').value.toLowerCase();
+  const now = Date.now();
+
+  const filteredItems = allItems.filter(item => {
+    if (currentTab === 'hidden' && !item.hidden) return false;
+    if (currentTab === 'open' && (item.hidden || isClosed(item, now))) return false;
+    if (currentTab === 'closed' && (item.hidden || !isClosed(item, now))) return false;
+    const searchStr = `${item.name || ''} ${TIER_LABEL[item.type] || ''} ${item.type || ''}`.toLowerCase();
+    if (searchQuery && !searchStr.includes(searchQuery)) return false;
+    return true;
+  });
+
+  if (filteredItems.length === 0){
+    listContainer.innerHTML = '<div class="empty-state">Nothing here yet. Add a break above and it shows up in this list.</div>';
+    return;
+  }
+
+  listContainer.innerHTML = filteredItems.map(item => {
+    const id = esc(item.id);
+    const tierClass = item.type === 'baller' ? 'b-baller' : item.type === 'bundle' ? 'b-bundle' : 'b-msrp';
+    const tierText = TIER_LABEL[item.type] || 'Break';
+
+    const hiddenBadge = item.hidden ? '<span class="badge b-hidden"><i class="ph-fill ph-eye-slash"></i> Hidden</span>' : '';
+    const imgCount = item.images && item.images.length > 1 ? `<span class="badge b-imgs"><i class="ph-fill ph-images"></i> ${item.images.length}</span>` : '';
+    const statusBadge = item.hidden ? '' : (isClosed(item, now)
+      ? '<span class="badge b-closed"><i class="ph-fill ph-lock"></i> Closed</span>'
+      : '<span class="badge b-open"><i class="ph-fill ph-broadcast"></i> Open</span>');
+    const timeBadge = item.scheduleEnd ? `<span class="badge b-time"><i class="ph-fill ph-clock"></i> Closes ${esc(formatLiteralDate(item.scheduleEnd))}</span>` : '';
+
+    return `
+      <li style="${item.hidden ? 'opacity:.62;' : ''}">
+        <div class="item-content">
+          <div class="item-header">
+            <span class="item-title">${esc(item.name)}</span>
+            ${statusBadge}${hiddenBadge}
+            <span class="badge ${tierClass}">${tierText}</span>
+            ${imgCount}
+          </div>
+          <div class="item-meta">${timeBadge}</div>
+          <div class="item-meta">
+            <span><strong>${money(item.price)}</strong></span>
+            <span>${toInt(item.stock)} spots</span>
+            <span>${toInt(item.clickCount)} clicks</span>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn-edit" onclick="startEditing('${id}')">Edit</button>
+          <button class="btn-del" onclick="deleteItem('${id}')">Delete</button>
+        </div>
+      </li>`;
+  }).join('');
+}
+
+function startEditing(id){
+  const item = allItems.find(i => String(i.id) === String(id));
+  if (!item) return;
+  editingId = item.id;
+  currentImage = item.image || '';
+  currentImages = item.images || (item.image ? [item.image] : []);
+  currentCreatedAt = item.createdAt;
+  currentClicks = toInt(item.clickCount);
+
+  selectedType = item.type || 'msrp';
+  selectedHidden = !!item.hidden;
+  document.querySelectorAll('.vis-pill').forEach(p => p.classList.toggle('selected', (p.dataset.vis === 'true') === selectedHidden));
+  document.getElementById('item-schedule-end').value = (item.scheduleEnd && item.scheduleEnd.indexOf('T') > -1) ? item.scheduleEnd : '';
+  document.getElementById('item-name').value = item.name || '';
+  document.getElementById('item-description').value = item.description || '';
+  document.getElementById('item-price').value = item.price != null ? item.price : '';
+  document.getElementById('item-stock').value = toInt(item.stock, 1);
+  document.getElementById('item-google-form-link').value = item.googleFormLink || '';
+  document.getElementById('item-image').value = '';
+  applyTypeUI();
+
+  document.getElementById('img-preview').innerHTML = (currentImages || []).slice(0, 8).map(src => `<img src="${esc(src)}" alt="">`).join('');
+  document.getElementById('submit-btn').innerText = 'Update break';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function deleteItem(id){
+  if (!confirm('Permanently delete this break?')) return;
+  try{
+    await fetchWithRetry(`${API_URL}/items/${id}`, { method:'DELETE' });
+    toast('Break deleted.');
+    loadItems();
+  } catch(e){ toast('Delete failed — try again.', true); }
+}
+
+function logout(){ localStorage.removeItem('adminToken'); location.reload(); }
+</script>
+</body>
+</html>
