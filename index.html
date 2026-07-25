@@ -707,6 +707,11 @@ async function loadStore(){
     const res = await fetchWithRetry(`${API_URL}/items`);
     const items = await res.json();
     if (!Array.isArray(items)) throw new Error(items && items.error ? items.error : 'Bad data');
+
+    // Nothing published yet — leave the sample line-up on screen.
+    const visible = items.filter(i => i && !i.hidden && TIER_ORDER.includes(i.type));
+    if (visible.length === 0) return;
+
     items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
     renderStore(items, false);
   } catch(e){
