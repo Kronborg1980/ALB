@@ -232,7 +232,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.t
       </div>
 
       <label for="item-google-form-link">Payment link (Shopify / Stripe / PayPal / Whatnot)</label>
-      <input type="url" id="item-google-form-link" placeholder="https://…">
+      <input type="url" id="item-google-form-link" placeholder="https://paypal.me/ALBtrading">
 
       <label for="item-image">Images — pick several, they're compressed before upload</label>
       <input type="file" id="item-image" multiple accept="image/*">
@@ -304,6 +304,10 @@ function toast(msg, isErr){
   t.textContent = msg;
   t.className = 'toast show' + (isErr ? ' err' : '');
   setTimeout(() => { t.className = 'toast' + (isErr ? ' err' : ''); }, 3200);
+}
+
+function authHeaders(){
+  return { 'Content-Type':'application/json', 'Authorization':'Bearer ' + (localStorage.getItem('adminToken') || '') };
 }
 
 async function fetchWithRetry(url, opts = {}, retries = 2){
@@ -489,7 +493,7 @@ async function submitItem(){
 
     const url = editingId ? `${API_URL}/items/${editingId}` : `${API_URL}/items`;
     const method = editingId ? 'PUT' : 'POST';
-    await fetchWithRetry(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    await fetchWithRetry(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
 
     const wasEditing = !!editingId;
     resetForm();
@@ -497,7 +501,8 @@ async function submitItem(){
     loadItems();
   } catch(e){
     console.error('Save error:', e);
-    toast('Save failed — the server didn\'t confirm. Nothing was lost; try again.', true);
+    if (String(e && e.message).includes('401')) toast('Session expired — log out and back in, then save again.', true);
+    else toast('Save failed — the server didn\'t confirm. Nothing was lost; try again.', true);
   } finally {
     btn.disabled = false;
     if (btn.innerText === 'Saving…') applyTypeUI();
@@ -632,7 +637,7 @@ function startEditing(id){
 async function deleteItem(id){
   if (!confirm('Permanently delete this break?')) return;
   try{
-    await fetchWithRetry(`${API_URL}/items/${id}`, { method:'DELETE' });
+    await fetchWithRetry(`${API_URL}/items/${id}`, { method:'DELETE', headers: authHeaders() });
     toast('Break deleted.');
     loadItems();
   } catch(e){ toast('Delete failed — try again.', true); }
