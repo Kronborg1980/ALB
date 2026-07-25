@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALB · Live Breaks</title>
+<title>ALB · Store</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,14 +12,12 @@
 
 <style>
 :root{
-  --ink:#080405; --ink-2:#12080a;
+  --ink:#080405;
   --blood:#c1121f; --ember:#ff2d3f; --ember-soft:#ff6b78;
   --bone:#f6f1ee; --steel:#9aa0ab; --dim:#9c9295;
 
-  /* tier colours — taken straight off the wheel */
-  --master:#a45cff; --master-rgb:164,92,255;
-  --ultra:#ffc247;  --ultra-rgb:255,194,71;
-  --great:#3d8bff;  --great-rgb:61,139,255;
+  /* category colours — straight off the wheel */
+  --master:#a45cff; --ultra:#ffc247; --great:#3d8bff; --poke:#ff2d3f;
 
   --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
@@ -41,7 +39,6 @@ body::before{content:'';position:fixed;inset:0;z-index:-10;pointer-events:none;
 .grain{position:fixed;inset:0;z-index:-8;pointer-events:none;background-image:var(--grain);background-size:140px;opacity:.05;mix-blend-mode:overlay}
 .vignette{position:fixed;inset:0;z-index:-7;pointer-events:none;box-shadow:inset 0 0 240px 70px rgba(0,0,0,.88)}
 
-/* neon tubes on the studio wall */
 .tube-wall{position:fixed;inset:0;z-index:-9;pointer-events:none;overflow:hidden}
 .neon-tube{position:absolute;width:5px;border-radius:5px;filter:blur(2px);animation:tubeHum 5s ease-in-out infinite}
 .nt-1{left:4%;top:8%;height:26vh;background:var(--master);box-shadow:0 0 24px 5px rgba(164,92,255,.75)}
@@ -94,7 +91,7 @@ main{position:relative;z-index:2;max-width:1240px;margin:1.5rem auto 4rem;paddin
   animation:shellIn .9s cubic-bezier(.22,1,.36,1) both}
 @keyframes shellIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
 
-/* ---------- centred section headers ---------- */
+/* ---------- centred section signs ---------- */
 .section-header{display:flex;align-items:center;justify-content:center;gap:1.4rem;margin:3.4rem auto 1.6rem;
   max-width:720px;padding:14px 46px;border-radius:60px;
   background:linear-gradient(90deg,rgba(193,18,31,.16),rgba(255,45,63,.06));
@@ -109,19 +106,27 @@ main > .section-header:first-child{margin-top:0}
 .section-count{display:block;text-align:center;font-family:'Chivo Mono',monospace;font-size:.7rem;
   letter-spacing:.18em;text-transform:uppercase;color:var(--steel);margin:-.6rem 0 1.6rem}
 
-/* ---------- centred LED tier signs ---------- */
-.tier-header{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;
+/* shipping rule — the one thing every buyer has to know */
+.ship-rule{display:flex;align-items:center;justify-content:center;gap:12px;max-width:760px;margin:0 auto 1.6rem;
+  padding:14px 26px;border-radius:30px;text-align:center;
+  background:linear-gradient(90deg,rgba(193,18,31,.16),rgba(255,45,63,.07));
+  border:1px solid rgba(255,45,63,.4);backdrop-filter:blur(8px);
+  box-shadow:0 0 26px rgba(193,18,31,.2);
+  font-family:'Chivo Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ember-soft)}
+.ship-rule i{font-size:1.1rem}
+
+/* ---------- category signs ---------- */
+.cat-header{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;
   margin:3.6rem auto 2rem;max-width:780px;padding:22px 40px;border-radius:24px;overflow:hidden;
   border:1px solid;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.tier-header::after{content:'';position:absolute;left:8%;right:8%;bottom:0;height:3px;border-radius:3px;
+.cat-header::after{content:'';position:absolute;left:8%;right:8%;bottom:0;height:3px;border-radius:3px;
   background:currentColor;animation:ledBreathe 2.4s ease-in-out infinite}
 @keyframes ledBreathe{0%,100%{opacity:.5;box-shadow:0 0 8px currentColor}50%{opacity:1;box-shadow:0 0 26px currentColor,0 0 60px currentColor}}
-.tier-title{display:flex;align-items:center;gap:16px;
+.cat-title{display:flex;align-items:center;gap:16px;
   font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 118,'wght' 900;
   font-size:clamp(1.4rem,4vw,2rem);letter-spacing:.16em;text-transform:uppercase}
-.tier-tagline{font-family:'Chivo Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;opacity:.85;text-align:center}
+.cat-tagline{font-family:'Chivo Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;opacity:.85;text-align:center}
 
-/* the ball itself, drawn in CSS */
 .ball{width:34px;height:34px;border-radius:50%;flex-shrink:0;position:relative;border:2px solid #0a0a0d;
   box-shadow:0 0 18px currentColor,inset 0 -6px 10px rgba(0,0,0,.5)}
 .ball::after{content:'';position:absolute;inset:0;margin:auto;width:10px;height:10px;border-radius:50%;
@@ -129,27 +134,32 @@ main > .section-header:first-child{margin-top:0}
 .ball-master{background:linear-gradient(#a45cff 0 47%,#141419 0 53%,#2c2c33)}
 .ball-ultra{background:linear-gradient(#ffc247 0 30%,#141419 0 38%,#ffc247 0 46%,#141419 0 53%,#2c2c33)}
 .ball-great{background:linear-gradient(#3d8bff 0 47%,#141419 0 53%,#2c2c33)}
+.ball-poke{background:linear-gradient(#ff2d3f 0 47%,#141419 0 53%,#e8e8ee)}
 
-.th-master{color:var(--master);border-color:rgba(164,92,255,.55);
+.ch-master{color:var(--master);border-color:rgba(164,92,255,.55);
   background:linear-gradient(160deg,rgba(45,20,70,.55),rgba(14,6,22,.75));
   box-shadow:0 0 45px rgba(164,92,255,.22),inset 0 2px 0 rgba(255,255,255,.2),inset 0 0 40px rgba(164,92,255,.07)}
-.th-master .tier-title{text-shadow:0 0 24px rgba(164,92,255,.9),0 0 60px rgba(164,92,255,.5)}
-.th-ultra{color:var(--ultra);border-color:rgba(255,194,71,.55);
+.ch-master .cat-title{text-shadow:0 0 24px rgba(164,92,255,.9),0 0 60px rgba(164,92,255,.5)}
+.ch-ultra{color:var(--ultra);border-color:rgba(255,194,71,.55);
   background:linear-gradient(160deg,rgba(60,45,0,.55),rgba(20,15,0,.75));
   box-shadow:0 0 45px rgba(255,194,71,.22),inset 0 2px 0 rgba(255,255,255,.24),inset 0 0 40px rgba(255,194,71,.07)}
-.th-ultra .tier-title{text-shadow:0 0 24px rgba(255,194,71,.9),0 0 60px rgba(255,180,0,.5)}
-.th-great{color:var(--great);border-color:rgba(61,139,255,.55);
+.ch-ultra .cat-title{text-shadow:0 0 24px rgba(255,194,71,.9),0 0 60px rgba(255,180,0,.5)}
+.ch-great{color:var(--great);border-color:rgba(61,139,255,.55);
   background:linear-gradient(160deg,rgba(0,32,70,.55),rgba(0,10,24,.75));
   box-shadow:0 0 45px rgba(61,139,255,.22),inset 0 2px 0 rgba(255,255,255,.2),inset 0 0 40px rgba(61,139,255,.07)}
-.th-great .tier-title{text-shadow:0 0 24px rgba(61,139,255,.9),0 0 60px rgba(61,139,255,.5)}
+.ch-great .cat-title{text-shadow:0 0 24px rgba(61,139,255,.9),0 0 60px rgba(61,139,255,.5)}
+.ch-poke{color:var(--poke);border-color:rgba(255,45,63,.55);
+  background:linear-gradient(160deg,rgba(70,10,16,.55),rgba(22,4,7,.75));
+  box-shadow:0 0 45px rgba(255,45,63,.22),inset 0 2px 0 rgba(255,255,255,.2),inset 0 0 40px rgba(255,45,63,.07)}
+.ch-poke .cat-title{text-shadow:0 0 24px rgba(255,45,63,.9),0 0 60px rgba(193,18,31,.6)}
 
-/* ---------- card grid ---------- */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px}
+/* ---------- product grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:30px}
 .grid.thin{max-width:760px;margin-inline:auto}
 
 .card-wrap{position:relative;border-radius:26px;padding:3px;background:rgba(0,0,0,.25);overflow:hidden;
-  perspective:1000px;transition:transform .4s cubic-bezier(.25,.8,.25,1),box-shadow .4s;
-  box-shadow:0 0 25px rgba(var(--tone),.22),0 0 55px rgba(var(--tone),.12)}
+  transition:transform .4s cubic-bezier(.25,.8,.25,1),box-shadow .4s;
+  box-shadow:0 0 25px rgba(var(--tone),.2),0 0 55px rgba(var(--tone),.1)}
 .card-wrap::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;z-index:0;opacity:.85;
   background:conic-gradient(transparent 0deg,transparent 85deg,rgba(var(--tone),1) 128deg,#fff 155deg,rgba(var(--tone),.6) 185deg,transparent 225deg);
   animation:spinBorder 5s linear infinite}
@@ -159,6 +169,7 @@ main > .section-header:first-child{margin-top:0}
 .tone-master{--tone:164,92,255}
 .tone-ultra{--tone:255,194,71}
 .tone-great{--tone:61,139,255}
+.tone-poke{--tone:255,45,63}
 
 .glass{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:23px;
   background:linear-gradient(160deg,rgba(30,16,20,.55),rgba(9,5,7,.75));
@@ -170,13 +181,14 @@ main > .section-header:first-child{margin-top:0}
   background:linear-gradient(115deg,transparent 32%,rgba(var(--tone),.16) 46%,rgba(255,255,255,.14) 52%,rgba(var(--tone),.14) 58%,transparent 72%)}
 .card-wrap:hover .glass::after{opacity:1}
 
-.card-live{animation:liveGlow 1.9s ease-in-out infinite alternate}
-@keyframes liveGlow{
+/* the LED pulse is reserved for things that need attention */
+.card-hot{animation:hotGlow 1.9s ease-in-out infinite alternate}
+@keyframes hotGlow{
   from{box-shadow:0 0 28px rgba(var(--tone),.35),0 0 55px rgba(var(--tone),.15)}
   to{box-shadow:0 0 62px rgba(var(--tone),.75),0 0 115px rgba(var(--tone),.35)}}
-.card-closed{filter:saturate(.3) brightness(.72)}
-.card-closed::before{animation-play-state:paused;opacity:.22}
-.card-closed:hover{transform:none}
+.card-out{filter:saturate(.28) brightness(.7)}
+.card-out::before{animation-play-state:paused;opacity:.2}
+.card-out:hover{transform:none}
 
 .ribbon{position:relative;z-index:8;display:flex;align-items:center;justify-content:center;gap:11px;padding:9px 0;
   font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 110,'wght' 800;
@@ -188,6 +200,7 @@ main > .section-header:first-child{margin-top:0}
 .rb-ultra{background-image:linear-gradient(90deg,#8a6410,#ffc247,#fff3cf,#ffc247,#8a6410);color:#231800}
 .rb-ultra .dot{background:#231800;box-shadow:0 0 10px rgba(60,42,0,.9)}
 .rb-great{background-image:linear-gradient(90deg,#123f80,#3d8bff,#bfd9ff,#3d8bff,#123f80);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.rb-poke{background-image:linear-gradient(90deg,#7d0410,#ff2d3f,#ffc7cd,#ff2d3f,#7d0410);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .dot{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff,0 0 24px #fff;animation:blink 1.1s ease-in-out infinite}
 @keyframes blink{50%{opacity:.3;transform:scale(.65)}}
 
@@ -209,20 +222,16 @@ main > .section-header:first-child{margin-top:0}
   letter-spacing:.14em;text-transform:uppercase;color:#fff;text-shadow:0 1px 3px #000;
   background:rgba(9,5,7,.85);border:1px solid rgba(var(--tone),.9);
   backdrop-filter:blur(10px);box-shadow:0 0 18px rgba(var(--tone),.45)}
-.stamp{position:absolute;bottom:12px;left:12px;z-index:6;display:flex;align-items:center;gap:7px;
-  padding:7px 13px;border-radius:10px;font-family:'Chivo Mono',monospace;font-size:.66rem;
-  letter-spacing:.08em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px #000;
-  background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px);pointer-events:none;transition:.3s}
-.stamp.soon{border-color:var(--ember);box-shadow:0 0 22px rgba(255,45,63,.85);animation:stampPulse .9s infinite alternate}
-@keyframes stampPulse{from{transform:scale(1)}to{transform:scale(1.05)}}
+.sold-band{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:rgba(8,4,5,.72)}
+.sold-band span{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 122,'wght' 900;
+  font-size:1.4rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;
+  padding:12px 26px;border:2px solid rgba(255,255,255,.5);border-radius:12px;transform:rotate(-7deg);
+  background:rgba(0,0,0,.55);text-shadow:0 2px 8px #000}
 
 .body{padding:1.6rem;display:flex;flex-direction:column;gap:1rem;flex:1;position:relative;z-index:2}
 .title{font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 108,'wght' 800;
-  font-size:1.3rem;line-height:1.2;text-transform:uppercase;text-shadow:0 2px 5px rgba(0,0,0,.8)}
-.desc{color:var(--dim);font-size:.95rem;flex:1}
-.date-row{display:flex;align-items:center;gap:9px;font-family:'Chivo Mono',monospace;font-size:.72rem;
-  letter-spacing:.08em;text-transform:uppercase;color:rgba(var(--tone),1);
-  padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.1)}
+  font-size:1.25rem;line-height:1.2;text-transform:uppercase;text-shadow:0 2px 5px rgba(0,0,0,.8)}
+.desc{color:var(--dim);font-size:.94rem;flex:1}
 .perks{display:flex;gap:8px;flex-wrap:wrap}
 .perk{display:inline-flex;align-items:center;gap:6px;font-family:'Chivo Mono',monospace;font-size:.6rem;
   letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:30px;
@@ -231,20 +240,21 @@ main > .section-header:first-child{margin-top:0}
 
 .price-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding-top:1.1rem;border-top:1px solid rgba(var(--tone),.22)}
-.price{font-family:'Chivo Mono',monospace;font-size:1.75rem;font-weight:700;color:rgba(var(--tone),1);
+.price{font-family:'Chivo Mono',monospace;font-size:1.7rem;font-weight:700;color:rgba(var(--tone),1);
   text-shadow:0 0 24px rgba(var(--tone),.7),0 0 52px rgba(var(--tone),.35)}
-.spots{font-family:'Chivo Mono',monospace;font-size:.72rem;letter-spacing:.06em;color:var(--steel);
-  background:rgba(var(--tone),.09);border:1px solid rgba(var(--tone),.28);padding:6px 13px;border-radius:30px}
-.spots.low{color:#fff;border-color:var(--ember);box-shadow:0 0 16px rgba(255,45,63,.45)}
+.stock{font-family:'Chivo Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);
+  background:rgba(var(--tone),.09);border:1px solid rgba(var(--tone),.28);padding:6px 13px;border-radius:30px;white-space:nowrap}
+.stock.low{color:#fff;border-color:var(--ember);box-shadow:0 0 16px rgba(255,45,63,.45)}
+.stock.out{color:#8a7f82;border-color:#3a2b2e;background:rgba(0,0,0,.3)}
 
-.claim{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;
+.buy{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;
   text-decoration:none;border:1px solid rgba(255,255,255,.3);border-radius:16px;padding:1.1rem;
   font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 112,'wght' 800;
   font-size:1rem;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;position:relative;overflow:hidden;
   transition:transform .35s cubic-bezier(.25,.8,.25,1),box-shadow .35s,filter .2s}
-.claim small{font-variation-settings:'wdth' 100,'wght' 600;font-size:.68rem;letter-spacing:.06em;
+.buy small{font-variation-settings:'wdth' 100,'wght' 600;font-size:.68rem;letter-spacing:.06em;
   text-transform:none;opacity:.9;margin-top:5px}
-.claim:hover{transform:translateY(-4px);filter:brightness(1.1)}
+.buy:hover{transform:translateY(-4px);filter:brightness(1.1)}
 .btn-master{background:linear-gradient(90deg,#7b2bff,#a45cff,#e0b3ff);background-size:200% auto;color:#fff;
   animation:shine 4s linear infinite;box-shadow:0 10px 30px rgba(164,92,255,.4),inset 0 2px 0 rgba(255,255,255,.4)}
 .btn-master:hover{box-shadow:0 0 50px rgba(164,92,255,.85)}
@@ -256,11 +266,14 @@ main > .section-header:first-child{margin-top:0}
 .btn-great{background:linear-gradient(90deg,#123f80,#3d8bff,#8fc0ff);background-size:200% auto;color:#fff;
   animation:shine 4s linear infinite;box-shadow:0 10px 30px rgba(61,139,255,.4),inset 0 2px 0 rgba(255,255,255,.4)}
 .btn-great:hover{box-shadow:0 0 50px rgba(61,139,255,.85)}
+.btn-poke{background:linear-gradient(90deg,#8d0812,#ff2d3f,#ff8b96);background-size:200% auto;color:#fff;
+  animation:shine 4s linear infinite;box-shadow:0 10px 30px rgba(255,45,63,.4),inset 0 2px 0 rgba(255,255,255,.4)}
+.btn-poke:hover{box-shadow:0 0 50px rgba(255,45,63,.85)}
 @keyframes shine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.claim.off{background:rgba(18,12,14,.9);color:#6d6367;border-color:#2a1f22;pointer-events:none;box-shadow:none;animation:none}
+.buy.off{background:rgba(18,12,14,.9);color:#6d6367;border-color:#2a1f22;pointer-events:none;box-shadow:none;animation:none}
 
 /* ---------- stream ---------- */
-.feed{display:grid;gap:32px;grid-template-columns:1fr}
+.feed{display:grid;gap:30px;grid-template-columns:1fr}
 @media(min-width:920px){.feed{grid-template-columns:1fr 1fr}}
 .tube-card{--tone:255,45,63}
 .tube-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 20px 12px}
@@ -268,7 +281,8 @@ main > .section-header:first-child{margin-top:0}
   font-family:'Chivo Mono',monospace;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
   background:rgba(0,0,0,.7);border:1px solid currentColor;backdrop-filter:blur(8px)}
 .lbl-live{color:#fff;background:linear-gradient(135deg,#8d0812,#ff2d3f);border:none;
-  box-shadow:0 0 26px rgba(255,45,63,.55);animation:stampPulse 1s infinite alternate}
+  box-shadow:0 0 26px rgba(255,45,63,.55);animation:pulseTag 1s infinite alternate}
+@keyframes pulseTag{from{transform:scale(1)}to{transform:scale(1.05)}}
 .lbl-vod{color:var(--steel)}
 .tube-open{display:inline-flex;align-items:center;gap:8px;text-decoration:none;padding:9px 16px;border-radius:10px;
   font-family:'Chivo Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;
@@ -300,7 +314,7 @@ main > .section-header:first-child{margin-top:0}
 
 /* ---------- states ---------- */
 .skeleton{position:relative;overflow:hidden;min-height:420px;border-radius:24px;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,45,63,.14);box-shadow:0 0 30px rgba(193,18,31,.06)}
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,45,63,.14)}
 .skeleton::after{content:'';position:absolute;inset:0;transform:translateX(-100%);
   background:linear-gradient(90deg,transparent,rgba(255,45,63,.1),transparent);animation:shimmer 1.6s infinite}
 @keyframes shimmer{100%{transform:translateX(100%)}}
@@ -316,14 +330,13 @@ main > .section-header:first-child{margin-top:0}
   background:linear-gradient(135deg,#ff0000,#c1121f);box-shadow:0 0 22px rgba(255,45,63,.45)}
 .sample-note{display:flex;align-items:center;justify-content:center;gap:10px;max-width:660px;margin:0 auto 2rem;
   padding:12px 22px;border-radius:30px;text-align:center;
-  background:rgba(193,18,31,.1);border:1px solid rgba(255,45,63,.32);color:var(--ember-soft);
+  background:rgba(255,194,71,.08);border:1px solid rgba(255,194,71,.35);color:var(--ultra);
   backdrop-filter:blur(8px);font-family:'Chivo Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase}
 
 footer{position:relative;z-index:2;text-align:center;padding:1rem 20px 4rem;color:var(--dim);
   font-family:'Chivo Mono',monospace;font-size:.7rem;letter-spacing:.12em;line-height:2.2;text-transform:uppercase}
 footer strong{color:var(--ember-soft)}
 
-/* ---------- image modal ---------- */
 .modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(4,2,3,.92);
   backdrop-filter:blur(20px);align-items:center;justify-content:center;padding:40px 20px}
 .modal img{max-width:92%;max-height:86vh;border:3px solid var(--ember);border-radius:20px;box-shadow:0 0 90px rgba(255,45,63,.65)}
@@ -336,8 +349,8 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--ember);outline-offs
   main{padding:1.5rem 1.1rem;margin:1rem auto 3rem;width:94%;border-radius:26px}
   .section-header{padding:12px 18px;gap:1rem;border-radius:40px}
   .section-title{font-size:1rem;letter-spacing:.14em}
-  .tier-header{padding:18px;margin:2.6rem auto 1.6rem}
-  .tier-title{gap:10px}
+  .cat-header{padding:18px;margin:2.6rem auto 1.6rem}
+  .cat-title{gap:10px}
   .ball{width:26px;height:26px}
   .grid{grid-template-columns:1fr;gap:26px}
   .sub-panel{flex-direction:column;text-align:center;padding:1.8rem 1.2rem}
@@ -345,21 +358,16 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--ember);outline-offs
   .sub-text p{margin:0 auto}
   .neon-tube{display:none}
 }
-
-/* ---------- mobile anti-flicker ----------
-   Android Chrome flickers when blurred glass sits under animated conic
-   gradients, so on touch devices the glass goes near-solid and the heavy
-   layers calm down. The LED motion stays. */
 @media (hover:none),(pointer:coarse){
   body::before{animation:none;background-size:100% 100%,100% 100%,100% 100%,100% 100%,100% 100%}
   .grain{display:none}
-  .nav-link,main,.glass,.tier-header,.section-header,.chip,.stamp,.perk,.tube-label,.bell,.modal{
+  .nav-link,main,.glass,.cat-header,.section-header,.chip,.perk,.tube-label,.bell,.modal,.ship-rule{
     backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
   main{background:rgba(13,6,8,.95)}
   .glass{background:linear-gradient(160deg,rgba(32,17,21,.97),rgba(10,5,7,.98))}
   .card-wrap::before{animation-duration:7s;opacity:.6}
   .card-wrap:hover{transform:none}
-  .card-live{animation:none;box-shadow:0 0 34px rgba(var(--tone),.6),0 0 66px rgba(var(--tone),.28)}
+  .card-hot{animation:none;box-shadow:0 0 34px rgba(var(--tone),.6),0 0 66px rgba(var(--tone),.28)}
   .glass::after{opacity:1;mix-blend-mode:normal;background-size:250% 100%;
     background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.05) 50%,transparent 58%);
     animation:sheen 7s linear infinite}
@@ -375,22 +383,20 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--ember);outline-offs
 <div class="grain"></div>
 <div class="vignette"></div>
 <div class="tube-wall">
-  <span class="neon-tube nt-1"></span>
-  <span class="neon-tube nt-2"></span>
-  <span class="neon-tube nt-3"></span>
-  <span class="neon-tube nt-4"></span>
+  <span class="neon-tube nt-1"></span><span class="neon-tube nt-2"></span>
+  <span class="neon-tube nt-3"></span><span class="neon-tube nt-4"></span>
 </div>
 <div class="rail"></div>
 
 <nav>
-  <a href="index.html" class="nav-link nav-active"><i class="ph-fill ph-monitor-play"></i> Live breaks</a>
+  <a href="index.html" class="nav-link nav-active"><i class="ph-fill ph-storefront"></i> Store</a>
   <a href="#stream" class="nav-link"><i class="ph-fill ph-broadcast"></i> The stream</a>
 </nav>
 
 <header>
   <div class="wheel" aria-hidden="true"></div>
   <h1 class="sign">A<span class="flicker">L</span>B</h1>
-  <p class="tagline">Live card breaks &amp; wheel spins</p>
+  <p class="tagline">Wheel spins · Cards · Breaks</p>
 </header>
 
 <main>
@@ -405,7 +411,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--ember);outline-offs
     <div class="glass sub-panel">
       <div class="sub-text">
         <h3><i class="ph-fill ph-youtube-logo"></i> Watch every hit live</h3>
-        <p>Subscribe and switch notifications on — you'll know the moment a break goes live, and spots fill fast once it starts.</p>
+        <p>Subscribe and switch notifications on — everything bought here gets opened on stream, and you'll know the second one starts.</p>
       </div>
       <div class="sub-actions">
         <a href="#" id="sub-link" target="_blank" rel="noopener" class="sub-btn"><i class="ph-fill ph-youtube-logo"></i> Subscribe</a>
@@ -418,31 +424,29 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--ember);outline-offs
 </main>
 
 <footer>
-  <strong>ALB</strong> · Live breaks &amp; wheel spins<br>
+  <strong>ALB</strong> · Wheel spins, cards &amp; breaks<br>
   Prices in USD · Shipping bought separately · Not affiliated with Nintendo
 </footer>
 
 <div id="myModal" class="modal" onclick="closeModal()">
   <button class="modal-close" aria-label="Close image">&times;</button>
-  <img id="img01" alt="Expanded item image">
+  <img id="img01" alt="Expanded product image">
 </div>
 
 <script>
 /* ===============================================================
-   CONFIG — the only lines you need to touch
+   CONFIG
    =============================================================== */
 const API_URL   = 'https://alb-worker.kronborgnielsen.workers.dev/api';
-const YT_HANDLE = 'ALBTrading';          // youtube.com/@ALBTrading
-const TZ        = 'America/Chicago';     // close times are entered in this zone
+const YT_HANDLE = 'ALBTrading';
 const CURRENCY  = 'USD';
 const LOCALE    = 'en-US';
+const LOW_STOCK = 3;                      // "only N left" kicks in at or below this
 /* =============================================================== */
 
 const YT_URL = `https://www.youtube.com/@${YT_HANDLE}`;
 document.getElementById('sub-link').href  = YT_URL + '?sub_confirmation=1';
 document.getElementById('bell-link').href = YT_URL + '?sub_confirmation=1';
-
-let timerInterval = null;
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -465,46 +469,6 @@ async function fetchWithRetry(url, opts = {}, retries = 2){
     } catch(e){ clearTimeout(timer); lastErr = e; if (attempt < retries){ await wait(700 * (attempt + 1)); continue; } }
   }
   throw lastErr || new Error('Request failed');
-}
-
-/* Reads the stored local datetime as TZ wall-clock time, returns epoch ms */
-function zoneToMs(localStr){
-  if (!localStr || localStr.indexOf('T') === -1) return null;
-  try{
-    const [d, tm] = localStr.split('T');
-    const [y, mo, da] = d.split('-').map(Number);
-    const [h, mi] = (tm || '00:00').split(':').map(Number);
-    const guess = Date.UTC(y, mo - 1, da, h, mi);
-    const parts = new Intl.DateTimeFormat('en-US',{ timeZone:TZ, hour12:false, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' }).formatToParts(new Date(guess));
-    const m = {}; parts.forEach(p => m[p.type] = p.value);
-    const hh = m.hour === '24' ? 0 : Number(m.hour);
-    const seen = Date.UTC(Number(m.year), Number(m.month) - 1, Number(m.day), hh, Number(m.minute), Number(m.second));
-    return guess - (seen - guess);
-  } catch(e){ return new Date(localStr).getTime(); }
-}
-
-function formatCloseDate(isoString){
-  if (!isoString || isoString.indexOf('T') === -1) return '';
-  try{
-    const [datePart] = isoString.split('T');
-    const [y, m, d] = datePart.split('-').map(Number);
-    const dt = new Date(y, m - 1, d);
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const suf = (d % 10 === 1 && d !== 11) ? 'st' : (d % 10 === 2 && d !== 12) ? 'nd' : (d % 10 === 3 && d !== 13) ? 'rd' : 'th';
-    return `${days[dt.getDay()]}, ${months[m - 1]} ${d}${suf}`;
-  } catch(e){ return ''; }
-}
-function formatCloseShort(isoString){
-  if (!isoString || isoString.indexOf('T') === -1) return '';
-  try{
-    const [datePart] = isoString.split('T');
-    const [y, m, d] = datePart.split('-').map(Number);
-    const dt = new Date(y, m - 1, d);
-    const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    return `${days[dt.getDay()]}, ${months[m - 1]} ${d}`;
-  } catch(e){ return ''; }
 }
 
 function renderSkeletons(container, count){
@@ -564,115 +528,114 @@ async function loadVideos(){
   }
 }
 
-/* ---------- tiers ----------
-   Data keys stay msrp / bundle / baller, so the worker and admin need
-   no changes. Only the names and colours are ALB's.                   */
-const TIERS = {
-  baller: {
-    tone:'tone-master', header:'th-master', ball:'ball-master', ribbon:'rb-master', btn:'btn-master',
-    title:'Master Ball', tagline:'Top shelf — sealed vintage and the heavy hitters',
-    chip:'Master Ball', btnText:'Claim your spot', btnSub:'Premium spots go first',
-    perks:'<span class="perk perk-tone"><i class="ph-fill ph-crown"></i> Top shelf</span><span class="perk">Shipping sold separately</span>'
+/* ---------- categories ---------- */
+const CATS = {
+  master: {
+    tone:'tone-master', header:'ch-master', ball:'ball-master', ribbon:'rb-master', btn:'btn-master',
+    title:'Master Ball', tagline:'Premium — big wheel spins and the heavy hitters',
+    chip:'Master Ball', tag:'Premium', buyText:'Buy now', buySub:'Opened live on stream'
   },
-  bundle: {
-    tone:'tone-ultra', header:'th-ultra', ball:'ball-ultra', ribbon:'rb-ultra', btn:'btn-ultra',
-    title:'Ultra Ball', tagline:'Bundles — more packs for the money',
-    chip:'Ultra Ball', btnText:'Lock in a spot', btnSub:'Best value per spot',
-    perks:'<span class="perk perk-tone"><i class="ph-fill ph-lightning"></i> Bundle value</span><span class="perk">Shipping sold separately</span>'
+  ultra: {
+    tone:'tone-ultra', header:'ch-ultra', ball:'ball-ultra', ribbon:'rb-ultra', btn:'btn-ultra',
+    title:'Ultra Ball', tagline:'Bundles, boxes and break spots',
+    chip:'Ultra Ball', tag:'Bundle', buyText:'Buy now', buySub:'Best value per pack'
   },
-  msrp: {
-    tone:'tone-great', header:'th-great', ball:'ball-great', ribbon:'rb-great', btn:'btn-great',
-    title:'Great Ball', tagline:'Straight retail price, no markup',
-    chip:'Great Ball', btnText:'Join the wheel', btnSub:'Retail price, live hits',
-    perks:'<span class="perk perk-tone"><i class="ph-fill ph-tag"></i> Retail price</span><span class="perk">Shipping sold separately</span>'
+  great: {
+    tone:'tone-great', header:'ch-great', ball:'ball-great', ribbon:'rb-great', btn:'btn-great',
+    title:'Great Ball', tagline:'Everyday — budget spins, singles and packs',
+    chip:'Great Ball', tag:'Everyday', buyText:'Buy now', buySub:'Cheapest way in'
+  },
+  poke: {
+    tone:'tone-poke', header:'ch-poke', ball:'ball-poke', ribbon:'rb-poke', btn:'btn-poke',
+    title:'Poké Ball', tagline:'Shipping, mailers and donations',
+    chip:'Extras', tag:'Extra', buyText:'Add it on', buySub:'Ships with your wins'
   }
 };
-const TIER_ORDER = ['baller','bundle','msrp'];
+const CAT_ORDER = ['master','ultra','great','poke'];
 
-function buildCard(item, tier){
-  const t = TIERS[tier];
+function buildCard(item, cat){
+  const c = CATS[cat];
   const id = esc(item.id);
-  const now = Date.now();
-  const endTime = zoneToMs(item.scheduleEnd);
+  const unlimited = !!item.unlimited;
   const stock = toInt(item.stock);
-  const isEnded = stock <= 0 || (endTime && now >= endTime);
-  const isOpen = !isEnded;
+  const soldOut = !unlimited && stock <= 0;
+  const low = !unlimited && stock > 0 && stock <= LOW_STOCK;
 
-  const ribbon = isOpen
-    ? `<div class="ribbon ${t.ribbon}"><span class="dot"></span> Open now — join the break <span class="dot"></span></div>` : '';
-  const stamp = (isOpen && endTime)
-    ? `<div class="stamp close-watch" data-end="${esc(item.scheduleEnd)}" data-id="${id}"><i class="ph-fill ph-calendar-x"></i> Closes ${formatCloseShort(item.scheduleEnd)}</div>` : '';
-  const dateRow = item.scheduleEnd
-    ? `<div class="date-row"><i class="ph-fill ph-calendar-x"></i> Closes ${formatCloseDate(item.scheduleEnd)}</div>` : '';
+  let ribbon = '';
+  if (!soldOut && low) ribbon = `<div class="ribbon ${c.ribbon}"><span class="dot"></span> Only ${stock} left <span class="dot"></span></div>`;
+  else if (!soldOut && item.featured) ribbon = `<div class="ribbon ${c.ribbon}"><span class="dot"></span> Featured <span class="dot"></span></div>`;
+
+  const stockLabel = soldOut ? 'Sold out' : unlimited ? 'In stock' : `${stock} in stock`;
+  const stockClass = soldOut ? 'out' : low ? 'low' : '';
 
   let btn;
-  if (isEnded) btn = '<div class="claim off">Break closed</div>';
-  else if (item.googleFormLink) btn = `<a href="${esc(item.googleFormLink)}" target="_blank" rel="noopener" class="claim ${t.btn}" onclick="trackClick('${id}')">${t.btnText}<small>${t.btnSub}</small></a>`;
-  else btn = '<div class="claim off">Coming soon</div>';
+  if (soldOut) btn = '<div class="buy off">Sold out</div>';
+  else if (item.buyLink) btn = `<a href="${esc(item.buyLink)}" target="_blank" rel="noopener" class="buy ${c.btn}" onclick="trackClick('${id}')">${c.buyText}<small>${c.buySub}</small></a>`;
+  else btn = '<div class="buy off">Coming soon</div>';
 
   const img = item.image || '';
+  const overlay = soldOut ? '<div class="sold-band"><span>Sold out</span></div>' : '';
   const thumb = img
-    ? `<div class="thumb" onclick="openModal('${esc(img)}')"><img src="${esc(img)}" alt="${esc(item.name)}" loading="lazy"><span class="chip">${t.chip}</span><div id="badge-container-${id}">${stamp}</div></div>`
-    : `<div class="thumb empty"><span class="chip">${t.chip}</span><div id="badge-container-${id}">${stamp}</div></div>`;
+    ? `<div class="thumb" onclick="openModal('${esc(img)}')"><img src="${esc(img)}" alt="${esc(item.name)}" loading="lazy"><span class="chip">${c.chip}</span>${overlay}</div>`
+    : `<div class="thumb empty"><span class="chip">${c.chip}</span>${overlay}</div>`;
+
+  const shipPerk = item.shipSeparate ? '<span class="perk"><i class="ph-fill ph-package"></i> Shipping separate</span>' : '';
 
   return `
-    <div class="card-wrap ${t.tone} ${isOpen ? 'card-live' : 'card-closed'}" id="card-${id}">
+    <div class="card-wrap ${c.tone} ${soldOut ? 'card-out' : (low || item.featured) ? 'card-hot' : ''}" id="card-${id}">
       <div class="glass">
         ${ribbon}
         ${thumb}
         <div class="body">
           <h3 class="title">${esc(item.name)}</h3>
           ${item.description ? `<p class="desc">${esc(item.description)}</p>` : ''}
-          <div class="perks">${t.perks}</div>
-          ${dateRow}
+          <div class="perks"><span class="perk perk-tone">${c.tag}</span>${shipPerk}</div>
           <div class="price-row">
             <span class="price">${money(item.price)}</span>
-            <span class="spots ${stock > 0 && stock <= 3 ? 'low' : ''}">${stock} ${stock === 1 ? 'spot' : 'spots'}</span>
+            <span class="stock ${stockClass}">${stockLabel}</span>
           </div>
-          <div id="btn-container-${id}">${btn}</div>
+          <div>${btn}</div>
         </div>
       </div>
     </div>`;
 }
 
-/* ---------- sample content ----------
-   Paints instantly so the board is never blank, and stays up if the
-   worker can't be reached. Delete this block once you're live.        */
-const hoursOut = h => {
-  const t = new Date(Date.now() + h * 3600000);
-  const pad = n => String(n).padStart(2, '0');
-  return `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}T${pad(t.getHours())}:${pad(t.getMinutes())}`;
-};
+/* ---------- sample stock ----------
+   Holds the shop until real products are published. Delete this block
+   when ALB's catalogue is up.                                          */
 const DEMO_ITEMS = [
-  { id:'demo-1', type:'baller', name:'Base Set booster pack — one pack, one spot', description:'A single 1999 pack with one name on it. Whatever falls out of it goes home with you.', price:1450, stock:1, scheduleEnd:hoursOut(30), googleFormLink:'', images:[] },
-  { id:'demo-2', type:'baller', name:'Evolving Skies booster box · 36 spots', description:'Full box, one pack per spot, opened live from first pack to last.', price:39, stock:36, scheduleEnd:hoursOut(9), googleFormLink:'', images:[] },
-  { id:'demo-3', type:'bundle', name:'Gold Diggers wheel spin', description:'The big wheel — every segment is a prize, and the top slots are the Master Ball hits.', price:15, stock:20, scheduleEnd:hoursOut(50), googleFormLink:'', images:[] },
-  { id:'demo-4', type:'bundle', name:'Mixed bundle · 4 packs + 1 spin', description:'Modern packs plus a spin on the small wheel, all in one spot.', price:35, stock:12, scheduleEnd:hoursOut(72), googleFormLink:'', images:[] },
-  { id:'demo-5', type:'msrp', name:'Budget wheel spin', description:'Small wheel, cheapest way into a live break.', price:5, stock:40, scheduleEnd:hoursOut(120), googleFormLink:'', images:[] },
-  { id:'demo-6', type:'msrp', name:'Prismatic Evolutions ETB · 9 spots', description:'Elite Trainer Box at shelf price, split nine ways.', price:12, stock:9, scheduleEnd:hoursOut(96), googleFormLink:'', images:[] }
+  { id:'d1', category:'master', name:'Gold Diggers wheel spin', description:'The big wheel. Every segment is a prize and the top slots are the Master Ball hits.', price:15, stock:12, unlimited:false, shipSeparate:true, featured:true, buyLink:'', images:[] },
+  { id:'d2', category:'master', name:'Base Set booster pack', description:'A single 1999 pack, opened live. Whatever falls out of it is yours.', price:249, stock:2, unlimited:false, shipSeparate:true, featured:false, buyLink:'', images:[] },
+  { id:'d3', category:'ultra', name:'Evolving Skies break spot', description:'One pack from the box, opened live on stream with your name on it.', price:39, stock:36, unlimited:false, shipSeparate:true, featured:false, buyLink:'', images:[] },
+  { id:'d4', category:'ultra', name:'Mixed bundle · 4 packs + 1 spin', description:'Modern packs plus a spin on the small wheel, all in one.', price:35, stock:8, unlimited:false, shipSeparate:true, featured:false, buyLink:'', images:[] },
+  { id:'d5', category:'great', name:'Budget wheel spin', description:'Small wheel, cheapest way into a live spin.', price:5, stock:40, unlimited:false, shipSeparate:true, featured:false, buyLink:'', images:[] },
+  { id:'d6', category:'great', name:'Vintage single · Raichu Base Set', description:'Played condition, priced to move.', price:18, stock:0, unlimited:false, shipSeparate:true, featured:false, buyLink:'', images:[] },
+  { id:'d7', category:'poke', name:'Standard bubble mailer', description:'Covers everything you win in one shipment. Buy one per shipment, not per item.', price:8, stock:0, unlimited:true, shipSeparate:false, featured:false, buyLink:'', images:[] },
+  { id:'d8', category:'poke', name:'Bigger box / large mailer', description:'For bigger hauls and sealed product.', price:22, stock:0, unlimited:true, shipSeparate:false, featured:false, buyLink:'', images:[] },
+  { id:'d9', category:'poke', name:'Sponsor a duck (donation)', description:'Straight support for the channel. Nothing ships, all love.', price:5, stock:0, unlimited:true, shipSeparate:false, featured:false, buyLink:'', images:[] }
 ];
 
 function renderStore(items, isSample){
   const sections = document.getElementById('store-sections');
 
-  const groups = { baller:[], bundle:[], msrp:[] };
+  const groups = { master:[], ultra:[], great:[], poke:[] };
   items.forEach(item => {
     if (!item || item.hidden) return;
-    if (groups[item.type]) groups[item.type].push(item);
+    if (groups[item.category]) groups[item.category].push(item);
   });
-  const total = TIER_ORDER.reduce((n, k) => n + groups[k].length, 0);
+  const total = CAT_ORDER.reduce((n, k) => n + groups[k].length, 0);
 
-  const boardHeader = `<div class="section-header"><span class="section-line"></span><span class="section-title">On the board</span><span class="section-line"></span></div>`;
+  const head = `<div class="section-header"><span class="section-line"></span><span class="section-title">The store</span><span class="section-line"></span></div>`;
 
   if (total === 0){
     sections.innerHTML = `
-      ${boardHeader}
+      ${head}
       <div class="grid">
         <div class="card-wrap notice-wrap">
           <div class="glass notice">
-            <h3>No breaks open right now</h3>
-            <p>I'm out hunting product for the next stream — new breaks and wheel spins go up as soon as the boxes land.</p>
-            <p>Hit the bell above and you'll be first in the door when they drop.</p>
+            <h3>Shop's restocking</h3>
+            <p>Everything sold out. New spins, packs and singles go up after the next hunt.</p>
+            <p>Hit the bell above and you'll see them first.</p>
             <p class="sig">— ALB</p>
           </div>
         </div>
@@ -680,25 +643,25 @@ function renderStore(items, isSample){
     return;
   }
 
-  let html = boardHeader;
+  let html = head;
   html += isSample
-    ? `<p class="sample-note"><i class="ph-fill ph-info"></i> Sample line-up — real breaks land here once they're published</p>`
-    : `<span class="section-count">${total} ${total === 1 ? 'break' : 'breaks'} listed</span>`;
+    ? `<p class="sample-note"><i class="ph-fill ph-info"></i> Sample catalogue — real products land here once they're published</p>`
+    : `<span class="section-count">${total} ${total === 1 ? 'product' : 'products'}</span>`;
+  html += `<div class="ship-rule"><i class="ph-fill ph-package"></i> Every order needs shipping — buy it once under Poké Ball, it covers everything you've won</div>`;
 
-  TIER_ORDER.forEach(tier => {
-    if (groups[tier].length === 0) return;
-    const t = TIERS[tier];
-    const thin = groups[tier].length < 3 ? ' thin' : '';
+  CAT_ORDER.forEach(cat => {
+    if (groups[cat].length === 0) return;
+    const c = CATS[cat];
+    const thin = groups[cat].length < 3 ? ' thin' : '';
     html += `
-      <div class="tier-header ${t.header}">
-        <div class="tier-title"><span class="ball ${t.ball}"></span> ${t.title} <span class="ball ${t.ball}"></span></div>
-        <div class="tier-tagline">${t.tagline}</div>
+      <div class="cat-header ${c.header}">
+        <div class="cat-title"><span class="ball ${c.ball}"></span> ${c.title} <span class="ball ${c.ball}"></span></div>
+        <div class="cat-tagline">${c.tagline}</div>
       </div>
-      <div class="grid${thin}">${groups[tier].map(item => buildCard(item, tier)).join('')}</div>`;
+      <div class="grid${thin}">${groups[cat].map(item => buildCard(item, cat)).join('')}</div>`;
   });
 
   sections.innerHTML = html;
-  startCountdownTimer();
 }
 
 async function loadStore(){
@@ -708,52 +671,16 @@ async function loadStore(){
     const items = await res.json();
     if (!Array.isArray(items)) throw new Error(items && items.error ? items.error : 'Bad data');
 
-    // Nothing published yet — leave the sample line-up on screen.
-    const visible = items.filter(i => i && !i.hidden && TIER_ORDER.includes(i.type));
+    // Nothing published yet — leave the sample catalogue on screen.
+    const visible = items.filter(i => i && !i.hidden && CAT_ORDER.includes(i.category));
     if (visible.length === 0) return;
 
     items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
     renderStore(items, false);
   } catch(e){
-    console.error('Store error — leaving the sample line-up up:', e);
+    console.error('Store error — leaving the sample catalogue up:', e);
   }
 }
-
-/* Silent close-watcher: shows a date, flips to CLOSING SOON in the last
-   hour, and locks the card live on screen the moment a break closes. */
-function updateTimers(){
-  const watchers = document.querySelectorAll('.close-watch');
-  if (watchers.length === 0 && timerInterval){ clearInterval(timerInterval); timerInterval = null; return; }
-  const now = Date.now();
-  watchers.forEach(w => {
-    const itemId = w.dataset.id;
-    const endTarget = zoneToMs(w.dataset.end);
-    if (!endTarget) return;
-    const distance = endTarget - now;
-
-    if (distance <= 0){
-      const btnContainer = document.getElementById(`btn-container-${itemId}`);
-      if (btnContainer) btnContainer.innerHTML = '<div class="claim off">Break closed</div>';
-      const badgeContainer = document.getElementById(`badge-container-${itemId}`);
-      if (badgeContainer) badgeContainer.innerHTML = '';
-      const card = document.getElementById(`card-${itemId}`);
-      if (card){
-        card.classList.remove('card-live');
-        card.classList.add('card-closed');
-        const ribbon = card.querySelector('.ribbon');
-        if (ribbon) ribbon.remove();
-      }
-      w.classList.remove('close-watch');
-      return;
-    }
-
-    if (distance < 3600000 && !w.classList.contains('soon')){
-      w.classList.add('soon');
-      w.innerHTML = '<i class="ph-fill ph-lightning"></i> Closing soon';
-    }
-  });
-}
-function startCountdownTimer(){ if (timerInterval) clearInterval(timerInterval); updateTimers(); timerInterval = setInterval(updateTimers, 5000); }
 
 function trackClick(id){
   fetch(`${API_URL}/click`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id }), keepalive:true }).catch(() => {});
